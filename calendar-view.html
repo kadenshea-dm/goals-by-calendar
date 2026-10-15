@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar View | StrideWell</title>
+  <style>
+    :root {
+      --navy: #203653; --teal: #168c83; --blue: #dceaff;
+      --purple: #eee3ff; --gray: #e9edf2; --bg: #f5f8fc;
+      --white: #fff; --text: #344454; --border: #dce4ee;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; line-height: 1.7; color: var(--text); background: var(--bg); }
+    .notice { padding: 12px 18px; text-align: center; background: #e3f2ef; color: var(--navy); font-size: .85rem; }
+    header { background: var(--white); border-bottom: 1px solid var(--border); }
+    .header-inner { max-width: 1100px; margin: auto; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 18px; }
+    .logo { color: var(--navy); font-size: 1.65rem; font-weight: 800; text-decoration: none; }
+    .logo span { color: var(--teal); }
+    nav { display: flex; flex-wrap: wrap; gap: 16px; }
+    nav a { color: var(--navy); text-decoration: none; font-size: .93rem; font-weight: bold; }
+    nav a:hover, nav a[aria-current="page"] { color: var(--teal); }
+    main { max-width: 1100px; margin: auto; padding: 38px 24px 60px; }
+    .hero { background: var(--navy); color: var(--white); padding: 42px; border-radius: 18px; margin-bottom: 26px; }
+    .eyebrow { color: #91e2d7; text-transform: uppercase; letter-spacing: 2px; font-size: .78rem; font-weight: bold; }
+    h1, h2, h3 { color: var(--navy); line-height: 1.3; }
+    .hero h1 { color: var(--white); font-size: clamp(2rem, 5vw, 3.1rem); margin: 12px 0; }
+    .hero p { max-width: 720px; }
+    .panel { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 26px; margin-bottom: 24px; }
+    .calendar-heading { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .calendar-heading h2 { margin: 0; }
+    .label { background: var(--purple); color: #62429b; border-radius: 6px; padding: 5px 10px; font-size: .8rem; font-weight: bold; }
+    .calendar { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border-top: 1px solid var(--border); border-left: 1px solid var(--border); margin-top: 22px; }
+    .day-name, .day { min-width: 0; padding: 9px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .day-name { background: #edf3fa; color: var(--navy); text-align: center; font-weight: bold; font-size: .85rem; }
+    .day { min-height: 100px; background: var(--white); overflow-wrap: anywhere; }
+    .day.empty { background: #f7f9fc; }
+    .day-number { display: block; color: var(--navy); font-weight: bold; margin-bottom: 5px; }
+    .event { display: block; border-radius: 5px; padding: 4px; margin-top: 5px; font-size: .72rem; line-height: 1.4; }
+    .done { background: #c9f0e6; color: #11665e; }
+    .planned { background: var(--blue); color: #28558a; }
+    .milestone { background: var(--purple); color: #62429b; }
+    .rest { background: var(--gray); color: #536575; }
+    .legend { display: flex; flex-wrap: wrap; gap: 12px 18px; margin-top: 18px; font-size: .86rem; }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .swatch { width: 13px; height: 13px; border-radius: 3px; display: inline-block; }
+    .summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .summary-card { padding: 20px; border-radius: 12px; background: var(--bg); }
+    .summary-card strong { display: block; color: var(--teal); font-size: 1.5rem; }
+    .summary-card p { margin: 5px 0 0; }
+    .link { color: var(--teal); font-weight: bold; text-decoration: none; }
+    footer { background: var(--navy); color: var(--white); text-align: center; padding: 28px 18px; }
+    footer .notice { background: transparent; color: #d9e9ee; padding: 0; margin-bottom: 12px; }
+    footer p { margin: 8px 0; } footer a { color: #91e2d7; text-decoration: none; }
+    @media (max-width: 760px) {
+      .header-inner { flex-direction: column; align-items: flex-start; }
+      nav { gap: 10px 15px; }
+      main { padding: 22px 10px 40px; }
+      .hero { padding: 30px 22px; }
+      .panel { padding: 14px; }
+      .day-name { font-size: .68rem; padding: 7px 1px; }
+      .day { min-height: 72px; padding: 4px 3px; }
+      .day-number { font-size: .8rem; }
+      .event { font-size: .6rem; padding: 3px 2px; }
+      .summary-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="notice">This is a fictional website created for educational purposes as part of MKTG:4400 at the University of Iowa. It is not a real business.</div>
+
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="index.html">Stride<span>Well</span></a>
+      <nav aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="goal-setting.html">Goal Setting</a>
+        <a href="daily-tracking.html">Daily Tracking</a>
+        <a href="calendar-view.html" aria-current="page">Calendar View</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <span class="eyebrow">Your month, in color</span>
+      <h1>See the bigger picture of your progress.</h1>
+      <p>
+        A color-coded calendar brings your fitness routine into focus.
+        See completed activities, upcoming plans, personal milestones,
+        and rest days in one easy-to-read monthly view.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="calendar-heading">
+        <h2>September 2026</h2>
+        <span class="label">Fictional sample calendar</span>
+      </div>
+      <p>
+        This example shows how a monthly fitness plan might look.
+        Each colored entry represents a fictional activity or planning note.
+      </p>
+
+      <div class="calendar" role="group" aria-label="September 2026 sample fitness calendar">
+        <div class="day-name">Sun</div><div class="day-name">Mon</div>
+        <div class="day-name">Tue</div><div class="day-name">Wed</div>
+        <div class="day-name">Thu</div><div class="day-name">Fri</div>
+        <div class="day-name">Sat</div>
+
+        <div class="day empty"></div>
+        <div class="day empty"></div>
+        <div class="day"><span class="day-number">1</span><span class="event done">Walk</span></div>
+        <div class="day"><span class="day-number">2</span><span class="event planned">Stretch</span></div>
+        <div class="day"><span class="day-number">3</span><span class="event done">Walk</span></div>
+        <div class="day"><span class="day-number">4</span><span class="event planned">Strength</span></div>
+        <div class="day"><span class="day-number">5</span><span class="event rest">Rest</span></div>
+
+        <div class="day"><span class="day-number">6</span><span class="event done">Walk</span></div>
+        <div class="day"><span class="day-number">7</span><span class="event planned">Stretch</span></div>
+        <div class="day"><span class="day-number">8</span><span class="event done">Walk</span></div>
+        <div class="day"><span class="day-number">9</span><span class="event done">Strength</span></div>
+        <div class="day"><span class="day-number">10</span><span class="event planned">Walk</span></div>
+        <div class="day"><span class="day-number">11</span><span class="event done">Stretch</span></div>
+        <div class="day"><span class="day-number">12</span><span class="event rest">Rest</span></div>
+
+        <div class="day"><span class="day-number">13</span><span class="event done">Walk</span></div>
+        <div class="day"><span class="day-number">14</span><span class="event planned">Strength</span></div>
+        <div class="day"><span class="day-number">15</span><span class="event done">Walk</span></div>
+        <div class="day"><span class="day-number">16</span><span class="event planned">Stretch</span></div>
+        <div class="day"><span class="day-number">17</span><span class="event done">Walk</span></div>
+        <div class="day"><span class="day-number">18</span><span class="event milestone">Goal reached</span></div>
+        <div class="day"><span class="day-number">19</span><span class="event rest">Rest</span></div>
+
+        <div class="day"><span class="day-number">20</span><span class="event done">Walk</span></div>
+        <div class="day"><span class="day-number">21</span><span class="event planned">Stretch</span></div>
+        <div class="day"><span class="day-number">22</span><span class="event done">Walk</span></div>
+        <div class="day"><span class="day-number">23</span><span class="event planned">Strength</span></div>
+        <div class="day"><span class="day-number">24</span><span class="event done">Walk</span></div>
+        <div class="day"><span class="day-number">25</span><span class="event planned">Stretch</span></div>
+        <div class="day"><span class="day-number">26</span><span class="event rest">Rest</span></div>
+
+        <div class="day"><span class="day-number">27</span><span class="event done">Walk</span></div>
+        <div class="day"><span class="day-number">28</span><span class="event planned">Strength</span></div>
+        <div class="day"><span class="day-number">29</span><span class="event done">Walk</span></div>
+        <div class="day"><span class="day-number">30</span><span class="event milestone">Monthly review</span></div>
+        <div class="day empty"></div>
+        <div class="day empty"></div>
+        <div class="day empty"></div>
+      </div>
+
+      <div class="legend">
+        <span><i class="swatch done"></i> Teal: Completed</span>
+        <span><i class="swatch planned"></i> Blue: Planned</span>
+        <span><i class="swatch milestone"></i> Purple: Milestone</span>
+        <span><i class="swatch rest"></i> Gray: Rest day</span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Read your calendar at a glance</h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <strong>Completed</strong>
+          <p>Recognize activities you have finished and routines you are maintaining.</p>
+        </div>
+        <div class="summary-card">
+          <strong>Planned</strong>
+          <p>Identify upcoming activities and make room for them in your schedule.</p>
+        </div>
+        <div class="summary-card">
+          <strong>Milestones</strong>
+          <p>Highlight personal achievements and pause to appreciate your effort.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Use the calendar to plan ahead</h2>
+      <p>
+        Look for days that consistently become busy, make room for recovery,
+        and choose activities that fit your actual routine. The purpose of
+        the calendar is to support your goals, not to make every day look perfect.
+      </p>
+      <p>
+        Start with <a class="link" href="goal-setting.html">Goal Setting</a>,
+        or learn how to record activities on
+        <a class="link" href="daily-tracking.html">Daily Tracking</a>.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="notice">This is a fictional website created for educational purposes as part of MKTG:4400 at the University of Iowa. It is not a real business.</div>
+    <p><strong>StrideWell: Fitness Goal Tracker</strong></p>
+    <p>Small steps. Stronger habits. A clearer view of your progress.</p>
+    <p>&copy; 2026 StrideWell. All fictional content.</p>
+    <p><a href="index.html">Home</a> | <a href="goal-setting.html">Goal Setting</a> | <a href="daily-tracking.html">Daily Tracking</a> | <a href="calendar-view.html">Calendar View</a></p>
+  </footer>
+</body>
+</html>
